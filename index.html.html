@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lamumu Quizzes</title>
+    <style>
+        /* --- Basic Styles --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        /* --- Main Container --- */
+        .container {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+
+        /* --- Header & Thematic Images --- */
+        header {
+            text-align: center;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            color: #4a4a4a;
+            font-size: 2.5em;
+            margin: 0;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        header h1 img {
+            width: 50px;
+            height: auto;
+            margin-right: 15px;
+        }
+
+        .theme-images {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .theme-images img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        /* --- Pre-Quiz Challenge Section --- */
+        #pre-quiz-section, #blog-section, .social-links {
+            text-align: center;
+        }
+
+        #pre-quiz-section h2, #blog-section h2, .social-links h2 {
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        .tiers-container {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        .tier-card {
+            flex: 1;
+            min-width: 250px;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #calf-challenge {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://i.postimg.cc/s2J6KGgq/Gy-Ekbve-W0-AAC5-Q2.jpg');
+        }
+
+        #moo-master {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://i.postimg.cc/76YBRPC6/Gz-Rm-KDx-XEAAXa-Ha.jpg');
+        }
+
+        .tier-card-bg {
+            background-size: cover;
+            background-position: center;
+            color: #ffffff;
+            text-shadow: 0px 1px 3px rgba(0,0,0,0.6);
+        }
+
+        .tier-card-bg h3 { color: #ffffff; }
+        .tier-card:hover { transform: translateY(-5px); }
+
+        .tier-card h3 {
+            margin-top: 0;
+            font-size: 1.5em;
+            color: #5e5ce6;
+        }
+        
+        .tier-card p {
+            margin-bottom: 20px;
+            min-height: 60px;
+        }
+
+        .start-quiz-btn {
+            background-color: #ffffff;
+            color: #333;
+            font-size: 1.1em;
+            font-weight: bold;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        /* --- Quiz Form --- */
+        .quiz-form { display: flex; flex-direction: column; gap: 25px; }
+        .question-container { background: #fafafa; border: 1px solid #e0e0e0; padding: 20px; border-radius: 10px; }
+        .question-container h3 { margin-top: 0; color: #5f5f5f; font-size: 1.2em; }
+        .options-container { display: flex; flex-direction: column; gap: 10px; }
+        .options-container label { padding: 12px; border-radius: 8px; border: 1px solid #ddd; cursor: pointer; display: block; }
+        .options-container input[type="radio"] { margin-right: 10px; }
+        .correct { background-color: #e6ffed !important; border-color: #5cb85c !important; font-weight: bold; }
+        .incorrect { background-color: #ffeded !important; border-color: #d9534f !important; }
+        #submit-btn { background-color: #28a745; color: white; font-size: 1.2em; font-weight: bold; border: none; padding: 15px; border-radius: 10px; cursor: pointer; margin-top: 20px; }
+        #results { text-align: center; margin-top: 25px; font-size: 1.2em; padding: 20px; border-radius: 10px; line-height: 1.6; }
+        #quiz-form, #results { display: none; }
+        
+        /* --- NEW: Interactive Blog Section --- */
+        #blog-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #eee;
+        }
+
+        .blog-image-container {
+            display: flex;
+            justify-content: space-around;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .blog-preview {
+            flex-basis: 220px; /* Base size for each preview item */
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .blog-preview img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 3px solid transparent;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .blog-preview:hover img {
+            transform: scale(1.05);
+        }
+
+        .blog-preview.active img {
+            border-color: #5e5ce6;
+            transform: scale(1.05);
+        }
+
+        .blog-preview h3.tagline {
+            margin-top: 10px;
+            font-size: 1.1em;
+            color: #333;
+        }
+
+        .blog-post-content {
+            display: none; /* All blog content is hidden by default */
+            text-align: left;
+            margin-top: 25px;
+            padding: 25px;
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+        }
+
+        .blog-post-content h3 {
+            margin-top: 0;
+            font-size: 1.5em;
+            color: #333;
+        }
+
+        .blog-post-content p, .blog-post-content ul {
+            font-size: 1em;
+            line-height: 1.6;
+            color: #555;
+        }
+        
+        .blog-post-content ul { padding-left: 20px; }
+
+        .blog-link {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #5e5ce6;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        /* --- Social Links Footer --- */
+        .social-links { margin-top: 40px; padding-top: 30px; border-top: 2px solid #eee; }
+        .social-links ul { list-style: none; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
+        .social-links a { display: block; padding: 10px 20px; background-color: #f0f2f5; color: #5e5ce6; text-decoration: none; border-radius: 8px; font-weight: bold; transition: background-color 0.3s, color 0.3s; }
+        .social-links a:hover { background-color: #5e5ce6; color: #ffffff; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1><img src="https://i.postimg.cc/9FTBJwxb/K1-G83-GYc-400x400.jpg" alt="Lamumu Icon"> Lamumu Quizzes</h1>
+            <div class="theme-images">
+                <img src="https://i.ibb.co/FbtrV3dG/Gyey-Qf-KWg-AAl-Aci.jpg" alt="Lamumu Art 1">
+                <img src="https://i.ibb.co/RT30Ws9N/Gyy1-PUo-XQAAvgsj.jpg" alt="Lamumu Art 2">
+                <img src="https://i.ibb.co/NgM0NYfc/Gy0fv1f-WEAAlc-RW.jpg" alt="Lamumu Art 3">
+                <img src="https://i.ibb.co/WvbQwWST/Gz-MNfs-SWo-AAzo-SL.jpg" alt="Lamumu Art 4">
+            </div>
+        </header>
+
+        <section id="pre-quiz-section">
+            <h2>Choose Your Challenge!</h2>
+            <div class="tiers-container">
+                <div id="calf-challenge" class="tier-card tier-card-bg">
+                    <h3>Calf's Challenge</h3>
+                    <p>A fun quiz for all community members. Test your knowledge and see how you rank!</p>
+                    <button class="start-quiz-btn">Start Free Quiz</button>
+                </div>
+                <div id="moo-master" class="tier-card tier-card-bg">
+                    <h3>Moo Master Stake</h3>
+                    <p><strong>🎁 Prize Alert!</strong> Score high for a chance to get whitelisted for our next NFT drop!</p>
+                    <button class="start-quiz-btn">Start for Prize</button>
+                </div>
+            </div>
+        </section>
+
+        <form id="quiz-form" class="quiz-form">
+            <div class="question-container" data-answer="B">
+                <h3>1. What did Lamumu announce at the start of Aura S2?</h3>
+                <div class="options-container">
+                    <label><input type="radio" name="q1" value="A"> A) Airdrop campaign</label>
+                    <label><input type="radio" name="q1" value="B"> B) Quests are coming soon</label>
+                    <label><input type="radio" name="q1" value="C"> C) Partnership with NFT projects</label>
+                    <label><input type="radio" name="q1" value="D"> D) Token burn event</label>
+                </div>
+            </div>
+            <div class="question-container" data-answer="A">
+                <h3>2. What type of activity did they encourage in S2?</h3>
+                <div class="options-container">
+                    <label><input type="radio" name="q2" value="A"> A) Sharing DeSci favorites</label>
+                    <label><input type="radio" name="q2" value="B"> B) Trading NFTs</label>
+                    <label><input type="radio" name="q2" value="C"> C) Joining Telegram</label>
+                    <label><input type="radio" name="q2" value="D"> D) Writing smart contracts</label>
+                </div>
+            </div>
+            <button type="submit" id="submit-btn">Check My Answers!</button>
+        </form>
+        <div id="results"></div>
+        
+        <section id="blog-section">
+            <h2>Latest News & Blogs</h2>
+            <div class="blog-image-container">
+                <div class="blog-preview" data-target="blog-content-1">
+                    <img src="https://i.postimg.cc/9Qdf18mQ/Gy8s9-Gh-X0-AA0oi-E.png" alt="Lamumu and Mocat art">
+                    <h3 class="tagline">Lamumu x MOCA Art Contest</h3>
+                </div>
+                <div class="blog-preview" data-target="blog-content-2">
+                    <img src="https://i.postimg.cc/3JCRFfJJ/Gyrc-Q2qak-AA0-D-A.jpg" alt="Product changelog graphic">
+                    <h3 class="tagline">Product Updates: August 2025</h3>
+                </div>
+                <div class="blog-preview" data-target="blog-content-3">
+                    <img src="https://i.postimg.cc/fT6KYLyh/Gya-Iab-Ia0-AAwq-BG.jpg" alt="Community driven science graphic">
+                    <h3 class="tagline">Community-Driven Science 🧬</h3>
+                </div>
+            </div>
+
+            <div id="blog-content-container">
+                <article id="blog-content-1" class="blog-post-content">
+                    <h3>Lamumu x MOCA Art Contest</h3>
+                    <p>Exclusive art contest for $MOCA and MOCA NFT holders! 15 winners will receive the Lamoolist (GTD) role.</p>
+                    <strong>How to join:</strong>
+                    <ul>
+                        <li>Join the Lamumu Discord and verify to get the Moo-cat / $MOCA holder role.</li>
+                        <li>Create art featuring Lamumu and Mocat mascots.</li>
+                        <li>Submit your art in the #mooca-contest channel.</li>
+                    </ul>
+                    <p><strong>Deadline:</strong> August 25, 2025, 10PM UTC</p>
+                </article>
+
+                <article id="blog-content-2" class="blog-post-content">
+                    <h3>Common Changelog – August 2025</h3>
+                    <p>Aura S2 Quests are coming soon, but our team just shipped a bunch of updates thanks to your feedback!</p>
+                    <strong>What's new:</strong>
+                    <ul>
+                        <li>New wallet integration live.</li>
+                        <li>Enhanced MCP integrations.</li>
+                        <li>Smoother Sui offchain voting.</li>
+                    </ul>
+                    <a href="https://common.xyz/common/discussions/3327-Product%20Announcements" class="blog-link" target="_blank" rel="noopener noreferrer">View Full Changelog</a>
+                </article>
+
+                <article id="blog-content-3" class="blog-post-content">
+                    <h3>Community-Driven Science 🧬</h3>
+                    <p>@Cerebrum_DAO just proposed @BioProtocol funding for $CLAW—enhancing a clinical trial with advanced biomarker testing for a brain health supplement that could impact millions.</p>
+                    <a href="https://common.xyz/bio-protocol/discussion/1283115-biopsy-proposal-for-funding-claw?refcode=0x3d42F34223d93826A419794F5dcAB7e81723Ea8A" class="blog-link" target="_blank" rel="noopener noreferrer">Join the Discussion</a>
+                </article>
+            </div>
+        </section>
+
+        <footer class="social-links">
+            <h2>Follow Us</h2>
+            <ul>
+                <li><a href="https://x.com/lamumudotxyz" target="_blank" rel="noopener noreferrer">Lamumu Twitter (X)</a></li>
+                <li><a href="http://discord.gg/lamumudotxyz" target="_blank" rel="noopener noreferrer">Lamumu Discord</a></li>
+                <li><a href="https://common.xyz/lamumu/" target="_blank" rel="noopener noreferrer">Lamumu Common</a></li>
+                <li><a href="https://x.com/commondotxyz" target="_blank" rel="noopener noreferrer">Common Twitter (X)</a></li>
+                <li><a href="https://www.tiktok.com/@commondotxyz" target="_blank" rel="noopener noreferrer">Common Tiktok</a></li>
+                <li><a href="https://discord.com/invite/DTD8GYJQ5j" target="_blank" rel="noopener noreferrer">Common Discord</a></li>
+                <li><a href="https://common.xyz/" target="_blank" rel="noopener noreferrer">Common</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        // --- Quiz Logic ---
+        const preQuizSection = document.getElementById('pre-quiz-section');
+        const startButtons = document.querySelectorAll('.start-quiz-btn');
+        const quizForm = document.getElementById('quiz-form');
+        const resultsContainer = document.getElementById('results');
+
+        startButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                preQuizSection.style.display = 'none';
+                quizForm.style.display = 'flex';
+            });
+        });
+
+        quizForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const questionContainers = document.querySelectorAll('.question-container');
+            let score = 0;
+            const totalQuestions = questionContainers.length;
+            
+            questionContainers.forEach(container => {
+                const correctAnswer = container.dataset.answer;
+                const userAnswerInput = container.querySelector('input[type="radio"]:checked');
+                
+                container.querySelectorAll('label').forEach(label => {
+                    label.classList.remove('correct', 'incorrect');
+                });
+                
+                if (userAnswerInput) {
+                    const userAnswer = userAnswerInput.value;
+                    const userLabel = userAnswerInput.parentElement;
+                    
+                    if (userAnswer === correctAnswer) {
+                        userLabel.classList.add('correct');
+                        score++;
+                    } else {
+                        userLabel.classList.add('incorrect');
+                        const correctLabel = container.querySelector(`input[value="${correctAnswer}"]`).parentElement;
+                        correctLabel.classList.add('correct');
+                    }
+                } else {
+                    const correctLabel = container.querySelector(`input[value="${correctAnswer}"]`).parentElement;
+                    correctLabel.classList.add('correct');
+                }
+            });
+            
+            let resultHTML = `<h3>You scored ${score} out of ${totalQuestions}!</h3>`;
+            const winningThreshold = 0.8;
+
+            if (score / totalQuestions >= winningThreshold) {
+                resultHTML += `<p><strong>Congratulations, Moo Master! 🏆</strong></p>
+                             <p>You've secured a whitelist spot for our upcoming NFT drop! Keep an eye on our announcements.</p>`;
+                resultsContainer.style.backgroundColor = '#e6ffed';
+                resultsContainer.style.color = '#2b783c';
+            } else {
+                 resultHTML += `<p><strong>Nice try!</strong></p>
+                              <p>You were close! Study up and try again to win that whitelist spot.</p>`;
+                 resultsContainer.style.backgroundColor = '#fffbe6';
+                 resultsContainer.style.color = '#8a6d3b';
+            }
+
+            resultsContainer.innerHTML = resultHTML;
+            resultsContainer.style.display = 'block';
+            resultsContainer.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // --- NEW Interactive Blog Logic ---
+        const blogPreviews = document.querySelectorAll('.blog-preview');
+        const blogContents = document.querySelectorAll('.blog-post-content');
+
+        blogPreviews.forEach(preview => {
+            preview.addEventListener('click', () => {
+                const targetId = preview.dataset.target;
+                const targetContent = document.getElementById(targetId);
+
+                // Check if the clicked content is already active
+                const isAlreadyActive = targetContent.style.display === 'block';
+
+                // Hide all content and remove active class from all previews
+                blogContents.forEach(content => content.style.display = 'none');
+                blogPreviews.forEach(p => p.classList.remove('active'));
+
+                // If it wasn't active, show it and add active class to its preview
+                if (!isAlreadyActive) {
+                    preview.classList.add('active');
+                    targetContent.style.display = 'block';
+                    targetContent.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
